@@ -2,24 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tonytangandroid.wood">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <application>
         <service
-            android:name=".ClearTransactionsService"
+            android:name="com.tonytangandroid.wood.ClearTransactionsService"
             android:exported="false" />
         <service
-            android:name=".DismissNotificationService"
+            android:name="com.tonytangandroid.wood.DismissNotificationService"
             android:exported="false" />
 
         <activity
-            android:name=".LeafListActivity"
+            android:name="com.tonytangandroid.wood.LeafListActivity"
             android:launchMode="singleTask"
             android:taskAffinity="com.tonytangandroid.wood.task"
             android:exported="true"
             android:theme="@style/Wood.Theme" />
 
         <activity
-            android:name=".LeafDetailsActivity"
-            android:parentActivityName=".LeafListActivity"
+            android:name="com.tonytangandroid.wood.LeafDetailsActivity"
+            android:parentActivityName="com.tonytangandroid.wood.LeafListActivity"
             android:theme="@style/Wood.Theme" />
     </application>
 
