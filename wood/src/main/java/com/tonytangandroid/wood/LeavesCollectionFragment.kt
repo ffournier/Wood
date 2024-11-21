@@ -115,7 +115,7 @@ class LeavesCollectionFragment : Fragment(), LeafAdapter.Listener, SearchView.On
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.clear) {
-            viewModel!!.clearAll()
+            viewModel?.clearAll()
             clearBuffer()
             return true
         } else if (item.itemId == R.id.browse_sql) {

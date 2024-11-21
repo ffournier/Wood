@@ -139,16 +139,11 @@ class WoodTree @JvmOverloads constructor(context: Context, private val threadTag
         transaction.priority = priority
         transaction.createAt = System.currentTimeMillis()
         transaction.tag = tag
-        transaction.setLength(message.length)
+        transaction.length = message.length
         if (t != null) {
             message = message + "\n" + t.message + "\n" + ErrorUtil.asString(t)
         }
-        transaction.setBody(
-            message.substring(
-                0,
-                min(message.length, maxContentLength)
-            ) + ""
-        )
+        transaction.body = message.substring(0, min(message.length, maxContentLength)) + ""
         create(transaction)
     }
 
@@ -189,7 +184,7 @@ class WoodTree @JvmOverloads constructor(context: Context, private val threadTag
         private val DEFAULT_RETENTION = Period.ONE_WEEK
         private const val PREF_WOOD_CONFIG = "pref_wood_config"
         private const val PREF_KEY_AUTO_SCROLL = "pref_key_auto_scroll"
-        @JvmStatic
+
         fun autoScroll(context: Context): Boolean {
             val sharedPreferences =
                 context.getSharedPreferences(PREF_WOOD_CONFIG, Context.MODE_PRIVATE)
@@ -198,7 +193,7 @@ class WoodTree @JvmOverloads constructor(context: Context, private val threadTag
 
         private fun formatThreadTag(message: String?, threadTagPrefix: String): String {
             return String.format(
-                Locale.US, "[%s#%s]:%s", threadTagPrefix, Thread.currentThread().getName(), message
+                Locale.US, "[%s#%s]:%s", threadTagPrefix, Thread.currentThread().name, message
             )
         }
     }

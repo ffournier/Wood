@@ -37,16 +37,16 @@ class LeafListViewModel(application: Application) : AndroidViewModel(application
         ClearAsyncTask(leafDao).execute()
     }
 
-    private class DeleteAsyncTask(private val leafDao: LeafDao) : AsyncTask<Leaf?, Void?, Int?>() {
+    private class DeleteAsyncTask(private val leafDao: LeafDao) : AsyncTask<Leaf, Void?, Int?>() {
 
-        override fun doInBackground(vararg params: Leaf?): Int {
+        override fun doInBackground(vararg params: Leaf): Int {
             return leafDao.deleteTransactions(*params)
         }
     }
 
-    private class ClearAsyncTask(private val leafDao: LeafDao) : AsyncTask<Leaf?, Void?, Int?>() {
+    private class ClearAsyncTask(private val leafDao: LeafDao) : AsyncTask<Leaf, Void?, Int?>() {
 
-        override fun doInBackground(vararg params: Leaf?): Int {
+        override fun doInBackground(vararg params: Leaf): Int {
             return leafDao.clearAll()
         }
     }

@@ -1,21 +1,22 @@
 package com.tonytangandroid.wood
 
 import android.os.Handler
+import android.os.Looper
 
-internal class Debouncer<T>(private val mInterval: Int, private val mCallback: Callback<T>) {
-    private val mHandler = Handler()
+internal class Debouncer<T>(private val interval: Int, private val callback: Callback<T>) {
+    private val handler = Handler(Looper.getMainLooper())
 
     fun consume(event: T) {
-        mHandler.removeCallbacksAndMessages(null)
-        mHandler.postDelayed(Counter(event, mCallback), mInterval.toLong())
+        handler.removeCallbacksAndMessages(null)
+        handler.postDelayed(Counter(event, callback), interval.toLong())
     }
 
     class Counter<T> internal constructor(
-        private val mEvent: T,
-        private val mCallback: Callback<T>
+        private val event: T,
+        private val callback: Callback<T>
     ) : Runnable {
         override fun run() {
-            mCallback.onEmit(mEvent)
+            callback.onEmit(event)
         }
     }
 }

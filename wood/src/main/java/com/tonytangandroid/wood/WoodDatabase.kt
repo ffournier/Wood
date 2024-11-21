@@ -12,12 +12,12 @@ internal abstract class WoodDatabase : RoomDatabase() {
     companion object {
         private var WOOD_DATABASE_INSTANCE: WoodDatabase? = null
 
-        fun getInstance(context: Context): WoodDatabase = WOOD_DATABASE_INSTANCE ?: Room.databaseBuilder<WoodDatabase?>(
+        fun getInstance(context: Context): WoodDatabase = WOOD_DATABASE_INSTANCE ?: Room.databaseBuilder<WoodDatabase>(
             context,
-            WoodDatabase::class.java,
-            "WoodDatabase"
-        ).build().also {
-            WOOD_DATABASE_INSTANCE = it
-        }
+                WoodDatabase::class.java,
+                "WoodDatabase"
+            ).build().also {
+                    WOOD_DATABASE_INSTANCE = it
+            }
     }
 }

@@ -12,7 +12,7 @@ internal class JobExecutor : Executor {
 
     init {
         val workQueue: BlockingQueue<Runnable> = LinkedBlockingQueue()
-        this.threadPoolExecutor =
+        threadPoolExecutor =
             ThreadPoolExecutor(
                 INITIAL_POOL_SIZE,
                 MAX_POOL_SIZE,

@@ -2,11 +2,12 @@ package com.tonytangandroid.wood.sample
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import timber.log.Timber
 
 class GeneratingLogActivity : AppCompatActivity() {
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,7 @@ class GeneratingLogActivity : AppCompatActivity() {
     }
 
     private fun log() {
-        for (i in 0..9) {
+        (0..9).forEach { i ->
             count++
             Timber.v("generate log :%s", count)
         }

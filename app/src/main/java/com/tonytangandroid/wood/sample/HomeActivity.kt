@@ -13,12 +13,13 @@ import timber.log.Timber
 import java.lang.Exception
 
 class HomeActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        findViewById<View?>(R.id.btn_generate_log).setOnClickListener(View.OnClickListener { view: View? -> generateTimberLog() })
-        findViewById<View?>(R.id.btn_test_extreme_log).setOnClickListener(View.OnClickListener { view: View? -> keepGenerateLog() })
-        findViewById<View?>(R.id.launch_wood_directly).setOnClickListener(View.OnClickListener { view: View? -> launchWoodDirectly() })
+        findViewById<View>(R.id.btn_generate_log).setOnClickListener(View.OnClickListener { view: View -> generateTimberLog() })
+        findViewById<View>(R.id.btn_test_extreme_log).setOnClickListener(View.OnClickListener { view: View -> keepGenerateLog() })
+        findViewById<View>(R.id.launch_wood_directly).setOnClickListener(View.OnClickListener { view: View -> launchWoodDirectly() })
         addAppShortcut(this)
     }
 
@@ -66,7 +67,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     companion object {
-        @JvmStatic
+        
         fun logInBackground() {
             Thread(Runnable { Timber.i("This is an INFO message triggered in background thread.") }).start()
         }

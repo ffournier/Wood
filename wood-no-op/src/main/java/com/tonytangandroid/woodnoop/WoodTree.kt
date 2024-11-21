@@ -20,7 +20,7 @@ class WoodTree : Timber.Tree {
         return this
     }
 
-    protected override fun log(
+    override fun log(
         priority: Int, tag: String?, message: String, t: Throwable?
     ) {
     }

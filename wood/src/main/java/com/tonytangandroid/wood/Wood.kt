@@ -47,7 +47,7 @@ object Wood {
                     .setIcon(Icon.createWithResource(context, R.drawable.wood_icon))
                     .setIntent(getLaunchIntent(context).setAction(Intent.ACTION_VIEW))
                     .build()
-            shortcutManager.addDynamicShortcuts(mutableListOf<ShortcutInfo?>(shortcut))
+            shortcutManager.addDynamicShortcuts(listOf<ShortcutInfo?>(shortcut))
             return id
         } else {
             return null

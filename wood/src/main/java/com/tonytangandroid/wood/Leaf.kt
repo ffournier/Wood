@@ -28,24 +28,8 @@ class Leaf {
     var priority: Int = 0
 
     @ColumnInfo(name = "length")
-    private var length = 0
+    var length: Int = 0
 
     @ColumnInfo(name = "body", typeAffinity = ColumnInfo.TEXT)
-    private var body: String? = null
-
-    fun length(): Int {
-        return length
-    }
-
-    fun setLength(length: Int) {
-        this.length = length
-    }
-
-    fun body(): String? {
-        return body
-    }
-
-    fun setBody(body: String?) {
-        this.body = body
-    }
+    var body: String? = null
 }

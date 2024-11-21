@@ -6,16 +6,17 @@ import android.text.style.UpdateAppearance
 import androidx.annotation.ColorInt
 
 internal class HighlightSpan(
-    private val mBackgroundColor: Int,
-    @param:ColorInt private val mTextColor: Int,
-    private val mUnderLineText: Boolean
+    private val backgroundColor: Int,
+    @param:ColorInt private val textColor: Int,
+    private val underLineText: Boolean
 ) : CharacterStyle(), UpdateAppearance {
-    private val mApplyBackgroundColor = mBackgroundColor != 0
-    private val mApplyTextColor = mTextColor != 0
+
+    private val applyBackgroundColor = backgroundColor != 0
+    private val applyTextColor = textColor != 0
 
     override fun updateDrawState(ds: TextPaint) {
-        if (mApplyTextColor) ds.color = mTextColor
-        if (mApplyBackgroundColor) ds.bgColor = mBackgroundColor
-        ds.isUnderlineText = mUnderLineText
+        if (applyTextColor) ds.color = textColor
+        if (applyBackgroundColor) ds.bgColor = backgroundColor
+        ds.isUnderlineText = underLineText
     }
 }

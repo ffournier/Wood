@@ -25,7 +25,7 @@ internal class RetentionManager(context: Context, retentionPeriod: WoodTree.Peri
     @Synchronized
     fun doMaintenance() {
         if (period > 0) {
-            val now = Date().getTime()
+            val now = Date().time
             if (isCleanupDue(now)) {
                 Logger.i("Performing data retention maintenance...")
                 deleteSince(getThreshold(now))
@@ -59,13 +59,11 @@ internal class RetentionManager(context: Context, retentionPeriod: WoodTree.Peri
         return if ((period == 0L)) now else now - period
     }
 
-    private fun toMillis(period: WoodTree.Period): Long {
-        when (period) {
-            WoodTree.Period.ONE_HOUR -> return TimeUnit.HOURS.toMillis(1)
-            WoodTree.Period.ONE_DAY -> return TimeUnit.DAYS.toMillis(1)
-            WoodTree.Period.ONE_WEEK -> return TimeUnit.DAYS.toMillis(7)
-            else -> return 0
-        }
+    private fun toMillis(period: WoodTree.Period): Long = when (period) {
+        WoodTree.Period.ONE_HOUR -> TimeUnit.HOURS.toMillis(1)
+        WoodTree.Period.ONE_DAY -> TimeUnit.DAYS.toMillis(1)
+        WoodTree.Period.ONE_WEEK -> TimeUnit.DAYS.toMillis(7)
+        else -> 0
     }
 
     companion object {

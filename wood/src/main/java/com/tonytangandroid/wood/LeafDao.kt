@@ -13,10 +13,10 @@ import io.reactivex.Flowable
 @Dao
 internal abstract class LeafDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertTransaction(leaf: Leaf?): Long
+    abstract fun insertTransaction(leaf: Leaf): Long
 
     @Delete
-    abstract fun deleteTransactions(vararg leaves: Leaf?): Int
+    abstract fun deleteTransactions(vararg leaves: Leaf): Int
 
     @Query(value = "DELETE FROM Leaf WHERE createAt < :beforeDate")
     abstract fun deleteTransactionsBefore(beforeDate: Long): Int

@@ -52,7 +52,7 @@ internal object FormatUtils {
     }
 
     fun getShareText(transaction: Leaf): CharSequence {
-        return transaction.body().orEmpty()
+        return transaction.body.orEmpty()
     }
 
     fun highlightSearchKeyword(textView: TextView, searchKey: String?): List<Int> {

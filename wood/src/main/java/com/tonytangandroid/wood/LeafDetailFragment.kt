@@ -53,17 +53,17 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     private var leaf: Leaf? = null
     private var searchIndexList: List<Int> = listOf(0)
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    private lateinit var search_bar: View
-    private lateinit var et_key_word: EditText
-    private lateinit var tv_search_count: TextView
-    private lateinit var tv_body: AppCompatTextView
+    private lateinit var searchBar: View
+    private lateinit var etKeyWord: EditText
+    private lateinit var tvSearchCount: TextView
+    private lateinit var tvBody: AppCompatTextView
     private val searchDebounce = Debouncer<String>(400, object: Callback<String> {
         override fun onEmit(event: String) {
             onSearchKeyEmitted(event)
         }
     })
-    private lateinit var nested_scroll_view: NestedScrollView
-    private lateinit var floating_action_button: FloatingActionButton
+    private lateinit var nestedScrollView: NestedScrollView
+    private lateinit var floatingActionButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,22 +87,22 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     private fun bindView(rootView: View) {
-        tv_body = rootView.findViewById<AppCompatTextView>(R.id.wood_details_body)
-        nested_scroll_view =
+        tvBody = rootView.findViewById<AppCompatTextView>(R.id.wood_details_body)
+        nestedScrollView =
             rootView.findViewById<NestedScrollView>(R.id.wood_details_scroll_parent)
-        floating_action_button =
+        floatingActionButton =
             rootView.findViewById<FloatingActionButton>(R.id.wood_details_search_fab)
-        search_bar = rootView.findViewById<View>(R.id.wood_details_search_bar)
+        searchBar = rootView.findViewById<View>(R.id.wood_details_search_bar)
         val searchBarPrev = rootView.findViewById<View>(R.id.wood_details_search_prev)
         val searchBarNext = rootView.findViewById<View>(R.id.wood_details_search_next)
         val searchBarClose = rootView.findViewById<View>(R.id.wood_details_search_close)
-        et_key_word = rootView.findViewById<EditText>(R.id.wood_details_search)
-        tv_search_count = rootView.findViewById<TextView>(R.id.wood_details_search_count)
-        floating_action_button.setOnClickListener(this)
+        etKeyWord = rootView.findViewById<EditText>(R.id.wood_details_search)
+        tvSearchCount = rootView.findViewById<TextView>(R.id.wood_details_search_count)
+        floatingActionButton.setOnClickListener(this)
         searchBarPrev.setOnClickListener(this)
         searchBarNext.setOnClickListener(this)
         searchBarClose.setOnClickListener(this)
-        et_key_word.addTextChangedListener(this)
+        etKeyWord.addTextChangedListener(this)
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -145,13 +145,13 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     private fun populateUI() {
         val l = leaf
         val color = if (l != null) {
-            colorUtil?.getTransactionColor(l) ?: ResourcesCompat.getColor(resources, R.color.wood_status_default, floating_action_button.context.theme)
+            colorUtil?.getTransactionColor(l) ?: ResourcesCompat.getColor(resources, R.color.wood_status_default, floatingActionButton.context.theme)
         } else {
-            resources.getColor(R.color.wood_status_default)
+            ResourcesCompat.getColor(resources, R.color.wood_status_default, context?.theme)
         }
-        floating_action_button.backgroundTintList = colorStateList(color)
-        search_bar.setBackgroundColor(color)
-        et_key_word.setHint(R.string.wood_search_hint)
+        floatingActionButton.backgroundTintList = colorStateList(color)
+        searchBar.setBackgroundColor(color)
+        etKeyWord.setHint(R.string.wood_search_hint)
         populateBody()
     }
 
@@ -165,7 +165,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     private fun updateUI() {
-        searchIndexList = FormatUtils.highlightSearchKeyword(tv_body, searchKey)
+        searchIndexList = FormatUtils.highlightSearchKeyword(tvBody, searchKey)
         updateSearch(1, searchKey)
     }
 
@@ -181,7 +181,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     override fun getText(): CharSequence {
-        val body: CharSequence = leaf?.body().orEmpty()
+        val body: CharSequence = leaf?.body.orEmpty()
         if (isNullOrWhiteSpace(body) || isNullOrWhiteSpace(searchKey)) {
             return body
         } else {
@@ -194,7 +194,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     override fun getTextView(): AppCompatTextView {
-        return tv_body
+        return tvBody
     }
 
     private fun updateSearch(targetIndex: Int, searchKey: String?) {
@@ -202,8 +202,8 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
         val list = searchIndexList
         val size = list.size
         targetIndex = adjustTargetIndex(targetIndex, size)
-        tv_search_count.text = "$targetIndex/$size"
-        (tv_body.getText() as Spannable).removeSpan(colorSpan)
+        tvSearchCount.text = "$targetIndex/$size"
+        (tvBody.getText() as Spannable).removeSpan(colorSpan)
         if (targetIndex > 0) {
             updateSpan(targetIndex, searchKey.orEmpty(), list)
         }
@@ -213,15 +213,15 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     private fun updateSpan(targetIndex: Int, searchKey: String, list: List<Int>) {
         val begin: Int = list[targetIndex - 1]
         val end = begin + searchKey.length
-        val lineNumber = tv_body.layout.getLineForOffset(begin)
-        (tv_body.getText() as Spannable).setSpan(
+        val lineNumber = tvBody.layout.getLineForOffset(begin)
+        (tvBody.getText() as Spannable).setSpan(
             colorSpan,
             begin,
             end,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        val scrollToY = tv_body.layout.getLineTop(lineNumber)
-        nested_scroll_view.scrollTo(0, scrollToY)
+        val scrollToY = tvBody.layout.getLineTop(lineNumber)
+        nestedScrollView.scrollTo(0, scrollToY)
     }
 
     private fun adjustTargetIndex(targetIndex: Int, size: Int): Int {
@@ -239,9 +239,9 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     private fun showKeyboard() {
-        et_key_word.requestFocus()
+        etKeyWord.requestFocus()
         val imm = inputMethodManager()
-        imm?.showSoftInput(et_key_word, InputMethodManager.SHOW_IMPLICIT)
+        imm?.showSoftInput(etKeyWord, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun inputMethodManager(): InputMethodManager? {
@@ -250,7 +250,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
 
     private fun hideKeyboard() {
         val imm = inputMethodManager()
-        imm?.hideSoftInputFromWindow(et_key_word.windowToken, 0)
+        imm?.hideSoftInputFromWindow(etKeyWord.windowToken, 0)
     }
 
     @Suppress("deprecation")
@@ -276,23 +276,23 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
 
     private fun clearSearch() {
         if (isNullOrWhiteSpace(searchKey)) {
-            floating_action_button.show()
-            search_bar.visibility = View.GONE
-            nested_scroll_view.setPadding(0, 0, 0, nested_scroll_view.bottom)
+            floatingActionButton.show()
+            searchBar.visibility = View.GONE
+            nestedScrollView.setPadding(0, 0, 0, nestedScrollView.bottom)
             hideKeyboard()
         } else {
-            et_key_word.setText("")
+            etKeyWord.setText("")
         }
     }
 
     private fun showSearch() {
-        floating_action_button.hide()
-        search_bar.visibility = View.VISIBLE
-        nested_scroll_view.setPadding(
+        floatingActionButton.hide()
+        searchBar.visibility = View.VISIBLE
+        nestedScrollView.setPadding(
             0,
-            getResources().getDimensionPixelSize(R.dimen.wood_search_bar_height),
+            resources.getDimensionPixelSize(R.dimen.wood_search_bar_height),
             0,
-            nested_scroll_view.bottom
+            nestedScrollView.bottom
         )
         showKeyboard()
     }

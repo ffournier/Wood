@@ -3,17 +3,10 @@ package com.tonytangandroid.wood
 import android.os.Handler
 import android.os.Looper
 
-internal class Sampler<T>(intervalInMills: Int, callback: Callback<T?>) {
+internal class Sampler<T>(intervalInMills: Int, val callback: Callback<T?>) {
     private val interval: Int = intervalInMills
-    private val callback: Callback<T?>
-    private val handler: Handler
-
+    private val handler: Handler = Handler(Looper.getMainLooper())
     private var currentRunnable: Counter<T?>? = null
-
-    init {
-        this.callback = callback
-        handler = Handler(Looper.getMainLooper())
-    }
 
     fun consume(event: T?) {
         val runnable = currentRunnable
@@ -24,13 +17,13 @@ internal class Sampler<T>(intervalInMills: Int, callback: Callback<T?>) {
                 handler.postDelayed(it, interval.toLong())
             }
         } else {
-            if (runnable.state == Counter.Companion.STATE_CREATED
-                || runnable.state == Counter.Companion.STATE_QUEUED
+            if (runnable.state == Counter.STATE_CREATED
+                || runnable.state == Counter.STATE_QUEUED
             ) {
                 //  yet to emit (with in an interval)
                 runnable.updateEvent(event)
-            } else if (runnable.state == Counter.Companion.STATE_RUNNING
-                || runnable.state == Counter.Companion.STATE_FINISHED
+            } else if (runnable.state == Counter.STATE_RUNNING
+                || runnable.state == Counter.STATE_FINISHED
             ) {
                 // interval finished. open new batch
                 Counter<T?>(event, callback).also {
@@ -41,14 +34,12 @@ internal class Sampler<T>(intervalInMills: Int, callback: Callback<T?>) {
         }
     }
 
-    class Counter<T> internal constructor(event: T?, callback: Callback<T?>) : Runnable {
-        private val callback: Callback<T?>
+    class Counter<T> internal constructor(event: T?, val callback: Callback<T?>) : Runnable {
         var state: Int
         private var event: T?
 
         init {
             this.event = event
-            this.callback = callback
             state = STATE_CREATED
         }
 

@@ -17,9 +17,9 @@ import com.tonytangandroid.wood.Wood.getLaunchIntent
 import com.tonytangandroid.wood.WoodColorUtil.Companion.getInstance
 
 internal class NotificationHelper(context: Context) {
-    private val mContext: Context = context
-    private val mNotificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    private val mColorUtil: WoodColorUtil = getInstance(context)
+    private val context: Context = context
+    private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val colorUtil: WoodColorUtil = getInstance(context)
 
     init {
         setUpChannelIfNecessary()
@@ -30,12 +30,12 @@ internal class NotificationHelper(context: Context) {
             val channel =
                 NotificationChannel(
                     CHANNEL_ID,
-                    mContext.getString(R.string.wood_notification_category),
+                    context.getString(R.string.wood_notification_category),
                     NotificationManager.IMPORTANCE_LOW
                 )
             channel.setShowBadge(false)
 
-            mNotificationManager.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
@@ -43,15 +43,15 @@ internal class NotificationHelper(context: Context) {
     fun show(transaction: Leaf, stickyNotification: Boolean) {
         addToBuffer(transaction)
         val builder =
-            NotificationCompat.Builder(mContext, CHANNEL_ID)
+            NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentIntent(
-                    SafePendingIntent.getActivity(mContext, 0, getLaunchIntent(mContext), 0)
+                    SafePendingIntent.getActivity(context, 0, getLaunchIntent(context), 0)
                 )
                 .setLocalOnly(true)
                 .setSmallIcon(R.drawable.wood_icon)
-                .setColor(ContextCompat.getColor(mContext, R.color.wood_colorPrimary))
+                .setColor(ContextCompat.getColor(context, R.color.wood_colorPrimary))
                 .setOngoing(stickyNotification)
-                .setContentTitle(mContext.getString(R.string.wood_notification_title))
+                .setContentTitle(context.getString(R.string.wood_notification_title))
         val inboxStyle = NotificationCompat.InboxStyle()
 
         var count = 0
@@ -73,38 +73,38 @@ internal class NotificationHelper(context: Context) {
         }
         builder.addAction(getDismissAction())
         builder.addAction(getClearAction())
-        mNotificationManager.notify(CHANNEL_ID.hashCode(), builder.build())
+        notificationManager.notify(CHANNEL_ID.hashCode(), builder.build())
     }
 
     private fun getNotificationText(transaction: Leaf): CharSequence {
-        val color = mColorUtil.getTransactionColor(transaction)
-        val text = transaction.body()
+        val color = colorUtil.getTransactionColor(transaction)
+        val text = transaction.body
         // Simple span no Truss required
         val spannableString = SpannableString(text)
         spannableString.setSpan(
-            ForegroundColorSpan(color), 0, text!!.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+            ForegroundColorSpan(color), 0, text?.length ?: 0, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
         )
         return spannableString
     }
 
     private fun getClearAction(): NotificationCompat.Action {
-        val clearTitle: CharSequence = mContext.getString(R.string.wood_clear)
-        val deleteIntent = Intent(mContext, ClearTransactionsService::class.java)
+        val clearTitle: CharSequence = context.getString(R.string.wood_clear)
+        val deleteIntent = Intent(context, ClearTransactionsService::class.java)
         val intent =
-            SafePendingIntent.getService(mContext, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT)
+            SafePendingIntent.getService(context, 11, deleteIntent, PendingIntent.FLAG_ONE_SHOT)
         return NotificationCompat.Action(R.drawable.wood_ic_delete_white_24dp, clearTitle, intent)
     }
 
     private fun getDismissAction(): NotificationCompat.Action {
-        val dismissTitle: CharSequence = mContext.getString(R.string.wood_dismiss)
-        val dismissIntent = Intent(mContext, DismissNotificationService::class.java)
+        val dismissTitle: CharSequence = context.getString(R.string.wood_dismiss)
+        val dismissIntent = Intent(context, DismissNotificationService::class.java)
         val intent =
-            SafePendingIntent.getService(mContext, 12, dismissIntent, PendingIntent.FLAG_ONE_SHOT)
+            SafePendingIntent.getService(context, 12, dismissIntent, PendingIntent.FLAG_ONE_SHOT)
         return NotificationCompat.Action(0, dismissTitle, intent)
     }
 
     fun dismiss() {
-        mNotificationManager.cancel(CHANNEL_ID.hashCode())
+        notificationManager.cancel(CHANNEL_ID.hashCode())
     }
 
     companion object {
@@ -114,7 +114,6 @@ internal class NotificationHelper(context: Context) {
         private val TRANSACTION_BUFFER = LongSparseArray<Leaf?>()
         private var TRANSACTION_COUNT = 0
 
-        @JvmStatic
         @Synchronized
         fun clearBuffer() {
             TRANSACTION_BUFFER.clear()

@@ -12,7 +12,6 @@ class LeavesCollectionFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.wood_fragment_leaves_collection, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.wood_fragment_leaves_collection, container, false)
+
 }
