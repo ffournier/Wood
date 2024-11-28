@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tonytangandroid.wood">
+    package="com.tonytangandroid.woodnoop">
 
     <application>
         <activity
             android:name=".LeafListActivity"
             android:launchMode="singleTask"
-            android:taskAffinity="com.tonytangandroid.wood.task"/>
+            android:taskAffinity="com.tonytangandroid.woodnoop.task"/>
     </application>
 </manifest>
