@@ -59,17 +59,16 @@ import timber.log.Timber
 
 object WoodIntegrationUtil {
 
-  @JvmStatic
-  fun initWood(application: Application) {
-    Timber.plant(
-      WoodTree(application)
-        .retainDataFor(WoodTree.Period.FOREVER)
-        .logLevel(Log.VERBOSE)
-        .autoScroll(false)
-        .maxLength(100000)
-        .showNotification(true)
-    )
-  }
+    fun initWood(application: Application) {
+        Timber.plant(
+            WoodTree(application)
+                .retainDataFor(WoodTree.Period.FOREVER)
+                .logLevel(Log.VERBOSE)
+                .autoScroll(false)
+                .maxLength(100000)
+                .showNotification(true)
+        )
+    }
 }
 ```
 
@@ -77,32 +76,32 @@ That's it! Wood will now record all Timber log.
 
 ##### Show Sticky/Normal Notification
 Sticky => true and Normal => false
-```java
-new WoodTree(context).showNotification(true/false)
+```kotlin
+WoodTree(context).showNotification(true/false)
 ```
 
 ### Other Settings
 ##### Check stored data
 Launch the Wood UI directly within your app with the intent from `Wood.getLaunchIntent()`.
-```java
-startActivity(Wood.getLaunchIntent(this));
+```kotlin
+startActivity(Wood.getLaunchIntent(this))
 ```
 
 ##### Add app shortcut to your app
-```java
-Wood.addAppShortcut(this);
+```kotlin
+Wood.addAppShortcut(this)
 ```
 
 ##### Max Length
 Set Response Max length to store
-```java
-new WoodTree(context).maxContentLength(10240L)//the maximum length (in bytes)
+```kotlin
+WoodTree(context).maxContentLength(10240L)//the maximum length (in bytes)
 ```
 
 ##### Retention Period
 Set the retention period for Timber log data captured
-```java
-new WoodTree(context).retainDataFor(Period.ONE_WEEK)
+```kotlin
+WoodTree(context).retainDataFor(Period.ONE_WEEK)
 ```
  
 ## Acknowledgements

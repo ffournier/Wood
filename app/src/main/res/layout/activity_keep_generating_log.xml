@@ -8,7 +8,7 @@
     android:padding="16dp"
     tools:context=".HomeActivity">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/wood_fragment"
         android:name="com.tonytangandroid.wood.LeavesCollectionFragment"
         android:layout_width="match_parent"

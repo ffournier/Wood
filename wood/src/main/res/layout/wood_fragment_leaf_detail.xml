@@ -29,8 +29,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/wood_ic_search_white_24dp"
+        android:contentDescription="search"
         app:fabSize="mini"
-      tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
         android:id="@+id/wood_details_search_bar"
@@ -97,8 +98,5 @@
             android:padding="5dp"
             android:src="@drawable/wood_ic_arrow_down_white_24dp"
             tools:ignore="ContentDescription" />
-
     </LinearLayout>
-
-
 </FrameLayout>
