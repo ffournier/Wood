@@ -14,18 +14,16 @@ import com.tonytangandroid.wood.WoodDatabase.Companion.getInstance
 @Suppress("deprecation")
 class LeafListViewModel(application: Application) : AndroidViewModel(application) {
     private var leafDao: LeafDao = getInstance(application).leafDao()
-    private var transactions: LiveData<PagedList<Leaf>>? = leafDao.run {
-        allTransactions?.let {  LivePagedListBuilder<Int, Leaf>(it, config).build() }
-    }
 
-    fun getTransactions(key: String?): LiveData<PagedList<Leaf>>? {
+    fun getTransactions(key: String?, filter: List<Int>): LiveData<PagedList<Leaf>>? {
         return if (key == null || key.trim { it <= ' ' }.isEmpty()) {
-            transactions
-        } else {
-            val test = leafDao.getAllTransactionsWith(key, LeafDao.SEARCH_DEFAULT)?.run {
+            leafDao.getAllTransactionsWith( filter)?.run {
                 LivePagedListBuilder<Int, Leaf>(this, config).build()
             }
-            test
+        } else {
+            leafDao.getAllTransactionsWith(key, filter)?.run {
+                LivePagedListBuilder<Int, Leaf>(this, config).build()
+            }
         }
     }
 

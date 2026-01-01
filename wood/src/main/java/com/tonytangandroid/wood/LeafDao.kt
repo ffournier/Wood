@@ -1,6 +1,5 @@
 package com.tonytangandroid.wood
 
-import android.util.Log
 import androidx.annotation.IntRange
 import androidx.paging.DataSource
 import androidx.room.Dao
@@ -31,19 +30,26 @@ internal abstract class LeafDao {
     abstract fun getTransactionsWithId(id: Long): Flowable<Leaf?>?
 
     fun getAllTransactionsWith(
-        key: String, @IntRange(from = 2, to = 7) priority: Int
+        @IntRange(from = 2, to = 7) priority: List<Int>
+    ): DataSource.Factory<Int, Leaf>? {
+        return getAllTransactionsIncludeRequestResponse(priority)
+    }
+
+    @Query(value = "SELECT id,createAt,length,priority,body FROM Leaf WHERE priority IN (:priority) ORDER BY id DESC")
+    abstract fun getAllTransactionsIncludeRequestResponse(
+       priority: List<Int>
+    ): DataSource.Factory<Int, Leaf>?
+
+    fun getAllTransactionsWith(
+        key: String, @IntRange(from = 2, to = 7) priority: List<Int>
     ): DataSource.Factory<Int, Leaf>? {
         val endWildCard = "$key%"
         val doubleSideWildCard = "%$key%"
         return getAllTransactionsIncludeRequestResponse(endWildCard, doubleSideWildCard, priority)
     }
 
-    @Query(value = "SELECT id,createAt,length,priority,body FROM Leaf WHERE (tag LIKE :endWildCard OR body LIKE :doubleWildCard) AND priority >= :priority ORDER BY id DESC")
+    @Query(value = "SELECT id,createAt,length,priority,body FROM Leaf WHERE (tag LIKE :endWildCard OR body LIKE :doubleWildCard) AND priority IN (:priority) ORDER BY id DESC")
     abstract fun getAllTransactionsIncludeRequestResponse(
-        endWildCard: String?, doubleWildCard: String?, priority: Int
+        endWildCard: String?, doubleWildCard: String?, priority: List<Int>
     ): DataSource.Factory<Int, Leaf>?
-
-    companion object {
-        const val SEARCH_DEFAULT: Int = Log.VERBOSE
-    }
 }
