@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.tonytangandroid.wood.WoodDatabase.Companion.getInstance
 import java.util.Date
 import java.util.concurrent.TimeUnit
+import androidx.core.content.edit
 
 internal class RetentionManager(context: Context, retentionPeriod: WoodTree.Period) {
     private val woodDatabase: WoodDatabase = getInstance(context)
@@ -43,11 +44,11 @@ internal class RetentionManager(context: Context, retentionPeriod: WoodTree.Peri
 
     private fun updateLastCleanup(time: Long) {
         LAST_CLEAN_UP = time
-        prefs.edit().putLong(KEY_LAST_CLEANUP, time).apply()
+        prefs.edit { putLong(KEY_LAST_CLEANUP, time) }
     }
 
     private fun deleteSince(threshold: Long) {
-        val rows = woodDatabase.leafDao()!!.deleteTransactionsBefore(threshold).toLong()
+        val rows = woodDatabase.leafDao().deleteTransactionsBefore(threshold).toLong()
         Logger.i("$rows transactions deleted")
     }
 

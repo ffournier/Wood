@@ -6,13 +6,13 @@ import android.os.Looper
 internal class Sampler<T>(intervalInMills: Int, val callback: Callback<T?>) {
     private val interval: Int = intervalInMills
     private val handler: Handler = Handler(Looper.getMainLooper())
-    private var currentRunnable: Counter<T?>? = null
+    private var currentRunnable: Counter<T>? = null
 
     fun consume(event: T?) {
         val runnable = currentRunnable
         if (runnable == null) {
             // first runnable
-            Counter<T?>(event, callback).also {
+            Counter(event, callback).also {
                 currentRunnable = it
                 handler.postDelayed(it, interval.toLong())
             }
@@ -26,7 +26,7 @@ internal class Sampler<T>(intervalInMills: Int, val callback: Callback<T?>) {
                 || runnable.state == Counter.STATE_FINISHED
             ) {
                 // interval finished. open new batch
-                Counter<T?>(event, callback).also {
+                Counter(event, callback).also {
                     currentRunnable = it
                     handler.postDelayed(it, interval.toLong())
                 }

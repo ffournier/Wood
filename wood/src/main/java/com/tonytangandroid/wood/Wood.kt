@@ -39,7 +39,7 @@ object Wood {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             val id = context.packageName + ".wood_ui"
             val shortcutManager =
-                context.getSystemService<ShortcutManager>(ShortcutManager::class.java)
+                context.getSystemService(ShortcutManager::class.java)
             val shortcut =
                 ShortcutInfo.Builder(context, id)
                     .setShortLabel("Wood")

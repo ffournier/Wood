@@ -3,6 +3,7 @@ package com.tonytangandroid.wood
 import androidx.recyclerview.widget.DiffUtil
 
 internal class ListDiffUtil : DiffUtil.ItemCallback<Leaf>() {
+
     private var mSearchKey: String? = null
 
     fun setSearchKey(searchKey: String?) {
