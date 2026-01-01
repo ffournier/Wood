@@ -7,15 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedList.Config
-import com.tonytangandroid.wood.LeafListViewModel.ClearAsyncTask
-import com.tonytangandroid.wood.LeafListViewModel.DeleteAsyncTask
 import com.tonytangandroid.wood.WoodDatabase.Companion.getInstance
 
 @Suppress("deprecation")
 class LeafListViewModel(application: Application) : AndroidViewModel(application) {
     private var leafDao: LeafDao = getInstance(application).leafDao()
     private var transactions: LiveData<PagedList<Leaf>>? = leafDao.run {
-        allTransactions?.let {  LivePagedListBuilder<Int, Leaf>(it, config).build() }
+        allTransactions?.let {  LivePagedListBuilder(it, config).build() }
     }
 
     fun getTransactions(key: String?): LiveData<PagedList<Leaf>>? {
@@ -23,7 +21,7 @@ class LeafListViewModel(application: Application) : AndroidViewModel(application
             transactions
         } else {
             val test = leafDao.getAllTransactionsWith(key, LeafDao.SEARCH_DEFAULT)?.run {
-                LivePagedListBuilder<Int, Leaf>(this, config).build()
+                LivePagedListBuilder(this, config).build()
             }
             test
         }

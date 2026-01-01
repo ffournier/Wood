@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.AppBarLayout
 import com.tonytangandroid.wood.Wood.addAppShortcut
 import com.tonytangandroid.wood.Wood.getLaunchIntent
 import timber.log.Timber
@@ -15,8 +18,13 @@ import java.lang.Exception
 class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        val toolbar = findViewById<Toolbar>(R.id.app_toolbar)
+        setSupportActionBar(toolbar)
+
         findViewById<View>(R.id.btn_generate_log).setOnClickListener(View.OnClickListener { view: View -> generateTimberLog() })
         findViewById<View>(R.id.btn_test_extreme_log).setOnClickListener(View.OnClickListener { view: View -> keepGenerateLog() })
         findViewById<View>(R.id.launch_wood_directly).setOnClickListener(View.OnClickListener { view: View -> launchWoodDirectly() })
