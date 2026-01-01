@@ -1,9 +1,9 @@
 package com.tonytangandroid.wood
 
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 
 internal class WoodColorUtil private constructor(context: Context) {
     private val colorDefault: Int = ContextCompat.getColor(context, R.color.wood_status_default)
@@ -27,8 +27,8 @@ internal class WoodColorUtil private constructor(context: Context) {
     }
 
     companion object {
-        val SEARCHED_HIGHLIGHT_BACKGROUND_COLOR: Int = Color.parseColor("#FD953F")
-        val HIGHLIGHT_BACKGROUND_COLOR: Int = Color.parseColor("#FFFD38")
+        val SEARCHED_HIGHLIGHT_BACKGROUND_COLOR: Int = "#FD953F".toColorInt()
+        val HIGHLIGHT_BACKGROUND_COLOR: Int = "#FFFD38".toColorInt()
         const val HIGHLIGHT_TEXT_COLOR: Int = 0
         const val HIGHLIGHT_UNDERLINE: Boolean = false
         private var TRANSACTION_COLOR_UTIL_INSTANCE: WoodColorUtil? = null

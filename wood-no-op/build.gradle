@@ -27,17 +27,17 @@ ext {
 
 android {
     namespace = "com.tonytangandroid.woodnoop"
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         minSdk rootProject.ext.minSdkVersion
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_21
     }
 }
 
 dependencies {
     implementation "com.jakewharton.timber:timber:$timberVersion"
-    implementation 'androidx.core:core-ktx:1.15.0'
-    implementation "androidx.fragment:fragment-ktx:1.8.5"
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation "androidx.fragment:fragment-ktx:1.8.9"
 }

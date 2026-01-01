@@ -1,5 +1,6 @@
 package com.tonytangandroid.wood
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -35,7 +36,6 @@ import com.tonytangandroid.wood.TextUtil.AsyncTextProvider
 import com.tonytangandroid.wood.TextUtil.asyncSetText
 import com.tonytangandroid.wood.TextUtil.isNullOrWhiteSpace
 import com.uber.autodispose.AutoDispose
-import com.uber.autodispose.FlowableSubscribeProxy
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
@@ -57,7 +57,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     private lateinit var etKeyWord: EditText
     private lateinit var tvSearchCount: TextView
     private lateinit var tvBody: AppCompatTextView
-    private val searchDebounce = Debouncer<String>(400, object: Callback<String> {
+    private val searchDebounce = Debouncer(400, object: Callback<String> {
         override fun onEmit(event: String) {
             onSearchKeyEmitted(event)
         }
@@ -87,17 +87,17 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     private fun bindView(rootView: View) {
-        tvBody = rootView.findViewById<AppCompatTextView>(R.id.wood_details_body)
+        tvBody = rootView.findViewById(R.id.wood_details_body)
         nestedScrollView =
-            rootView.findViewById<NestedScrollView>(R.id.wood_details_scroll_parent)
+            rootView.findViewById(R.id.wood_details_scroll_parent)
         floatingActionButton =
-            rootView.findViewById<FloatingActionButton>(R.id.wood_details_search_fab)
-        searchBar = rootView.findViewById<View>(R.id.wood_details_search_bar)
+            rootView.findViewById(R.id.wood_details_search_fab)
+        searchBar = rootView.findViewById(R.id.wood_details_search_bar)
         val searchBarPrev = rootView.findViewById<View>(R.id.wood_details_search_prev)
         val searchBarNext = rootView.findViewById<View>(R.id.wood_details_search_next)
         val searchBarClose = rootView.findViewById<View>(R.id.wood_details_search_close)
-        etKeyWord = rootView.findViewById<EditText>(R.id.wood_details_search)
-        tvSearchCount = rootView.findViewById<TextView>(R.id.wood_details_search_count)
+        etKeyWord = rootView.findViewById(R.id.wood_details_search)
+        tvSearchCount = rootView.findViewById(R.id.wood_details_search_count)
         floatingActionButton.setOnClickListener(this)
         searchBarPrev.setOnClickListener(this)
         searchBarNext.setOnClickListener(this)
@@ -124,7 +124,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
             .getTransactionWithId(id)?.run {
                 subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .`as`<FlowableSubscribeProxy<Leaf?>?>(
+                .`as`(
                     AutoDispose.autoDisposable<Leaf?>(
                         AndroidLifecycleScopeProvider.from(getViewLifecycleOwner())
                     )
@@ -134,7 +134,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     private fun create(): LeafDetailViewModel {
-        return ViewModelProvider(requireActivity()).get<LeafDetailViewModel>(LeafDetailViewModel::class.java)
+        return ViewModelProvider(requireActivity())[LeafDetailViewModel::class.java]
     }
 
     private fun transactionUpdated(transaction: Leaf) {
@@ -197,6 +197,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
         return tvBody
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateSearch(targetIndex: Int, searchKey: String?) {
         var targetIndex = targetIndex
         val list = searchIndexList
@@ -253,7 +254,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
         imm?.hideSoftInputFromWindow(etKeyWord.windowToken, 0)
     }
 
-    @Suppress("deprecation")
+    @Deprecated("Deprecated in Java")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         if (!isVisibleToUser) {
             hideKeyboard()
@@ -262,15 +263,19 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     override fun onClick(v: View) {
-        val id = v.id
-        if (id == R.id.wood_details_search_fab) {
-            showSearch()
-        } else if (id == R.id.wood_details_search_close) {
-            clearSearch()
-        } else if (id == R.id.wood_details_search_prev) {
-            updateSearch(currentSearchIndex - 1, searchKey)
-        } else if (id == R.id.wood_details_search_next) {
-            updateSearch(currentSearchIndex + 1, searchKey)
+        when (v.id) {
+            R.id.wood_details_search_fab -> {
+                showSearch()
+            }
+            R.id.wood_details_search_close -> {
+                clearSearch()
+            }
+            R.id.wood_details_search_prev -> {
+                updateSearch(currentSearchIndex - 1, searchKey)
+            }
+            R.id.wood_details_search_next -> {
+                updateSearch(currentSearchIndex + 1, searchKey)
+            }
         }
     }
 
@@ -302,15 +307,18 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val itemId = item.itemId
-        if (itemId == R.id.share_text) {
-            leaf?.let { share(FormatUtils.getShareText(it)) }
-            return true
-        } else if (itemId == R.id.copy) {
-            leaf?.let { copy(FormatUtils.getShareText(it)) }
-            return true
-        } else {
-            return super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.share_text -> {
+                leaf?.let { share(FormatUtils.getShareText(it)) }
+                return true
+            }
+            R.id.copy -> {
+                leaf?.let { copy(FormatUtils.getShareText(it)) }
+                return true
+            }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
         }
     }
 
@@ -332,6 +340,7 @@ class LeafDetailFragment : Fragment(), View.OnClickListener, AsyncTextProvider, 
 
     companion object {
         private const val ARG_ID = "arg_id"
+
         fun newInstance(id: Long): LeafDetailFragment {
             val fragment = LeafDetailFragment()
             val b = Bundle()

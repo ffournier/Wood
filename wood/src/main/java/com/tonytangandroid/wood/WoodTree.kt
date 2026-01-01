@@ -3,14 +3,13 @@ package com.tonytangandroid.wood
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.tonytangandroid.wood.WoodTree.ErrorUtil
 import timber.log.Timber.DebugTree
 import java.io.PrintWriter
 import java.io.StringWriter
-import java.util.ArrayList
 import java.util.Locale
 import java.util.concurrent.Executor
 import kotlin.math.min
+import androidx.core.content.edit
 
 class WoodTree @JvmOverloads constructor(context: Context, private val threadTagPrefix: String = "") : DebugTree() {
     private var contextApp: Context = context.applicationContext
@@ -20,7 +19,7 @@ class WoodTree @JvmOverloads constructor(context: Context, private val threadTag
     private var retentionManager: RetentionManager
     private var maxContentLength: Int = 250000
     private var stickyNotification = false
-    private var supportedTaggerList: MutableList<String> = ArrayList<String>()
+    private var supportedTaggerList: MutableList<String> = ArrayList()
     private val sharedPreferences: SharedPreferences
     private var logLevel = Log.DEBUG
 
@@ -84,7 +83,7 @@ class WoodTree @JvmOverloads constructor(context: Context, private val threadTag
      * @return The [WoodTree] instance.
      */
     fun autoScroll(autoScroll: Boolean): WoodTree {
-        sharedPreferences.edit().putBoolean(PREF_KEY_AUTO_SCROLL, autoScroll).apply()
+        sharedPreferences.edit { putBoolean(PREF_KEY_AUTO_SCROLL, autoScroll) }
         return this
     }
 
@@ -103,7 +102,7 @@ class WoodTree @JvmOverloads constructor(context: Context, private val threadTag
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         if (shouldBeLogged(priority, tag.orEmpty())) {
             val assembledMessage: String = formatThreadTag(message, this.threadTagPrefix)
-            executor.execute(Runnable { doLog(priority, tag, assembledMessage, t) })
+            executor.execute { doLog(priority, tag, assembledMessage, t) }
         }
     }
 
@@ -143,7 +142,7 @@ class WoodTree @JvmOverloads constructor(context: Context, private val threadTag
         if (t != null) {
             message = message + "\n" + t.message + "\n" + ErrorUtil.asString(t)
         }
-        transaction.body = message.substring(0, min(message.length, maxContentLength)) + ""
+        transaction.body = message.take(min(message.length, maxContentLength)) + ""
         create(transaction)
     }
 

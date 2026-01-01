@@ -16,8 +16,7 @@ import com.tony.tang.safe.pending.intent.sdk.SafePendingIntent
 import com.tonytangandroid.wood.Wood.getLaunchIntent
 import com.tonytangandroid.wood.WoodColorUtil.Companion.getInstance
 
-internal class NotificationHelper(context: Context) {
-    private val context: Context = context
+internal class NotificationHelper(val context: Context) {
     private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val colorUtil: WoodColorUtil = getInstance(context)
 

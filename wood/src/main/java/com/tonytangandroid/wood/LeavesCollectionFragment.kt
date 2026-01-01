@@ -16,7 +16,6 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tonytangandroid.wood.LeavesCollectionFragment.TransactionListWithSearchKeyModel
 import com.tonytangandroid.wood.NotificationHelper.Companion.clearBuffer
 import com.tonytangandroid.wood.WoodTree.Companion.autoScroll
 
@@ -38,7 +37,7 @@ class LeavesCollectionFragment : Fragment(), LeafAdapter.Listener, SearchView.On
         })
 
     // 300 mills delay min. Max no limit
-    private val searchDebounce = Debouncer<String?>(
+    private val searchDebounce = Debouncer(
         300,
         object : Callback<String?> {
             override fun onEmit(event: String?) {
@@ -58,7 +57,7 @@ class LeavesCollectionFragment : Fragment(), LeafAdapter.Listener, SearchView.On
     }
 
     private fun bindView(rootView: View) {
-        recyclerView = rootView.findViewById<RecyclerView>(R.id.wood_transaction_list)
+        recyclerView = rootView.findViewById(R.id.wood_transaction_list)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,12 +72,12 @@ class LeavesCollectionFragment : Fragment(), LeafAdapter.Listener, SearchView.On
         recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         recyclerView.setAdapter(adapter)
 
-        viewModel = ViewModelProvider(this).get<LeafListViewModel>(LeafListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[LeafListViewModel::class.java]
         loadResults(null, viewModel?.getTransactions(null))
     }
 
     private fun loadResults(searchKey: String?, pagedListLiveData: LiveData<PagedList<Leaf>>?) {
-        currentSubscription?.takeIf { it.hasObservers() == true }?.run {
+        currentSubscription?.takeIf { it.hasObservers() }?.run {
             removeObservers(this@LeavesCollectionFragment)
         }
         currentSubscription = pagedListLiveData
@@ -114,14 +113,18 @@ class LeavesCollectionFragment : Fragment(), LeafAdapter.Listener, SearchView.On
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.clear) {
-            viewModel?.clearAll()
-            clearBuffer()
-            return true
-        } else if (item.itemId == R.id.browse_sql) {
-            return true
-        } else {
-            return super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.clear -> {
+                viewModel?.clearAll()
+                clearBuffer()
+                return true
+            }
+            R.id.browse_sql -> {
+                return true
+            }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
         }
     }
 

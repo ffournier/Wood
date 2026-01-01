@@ -21,7 +21,7 @@ class GeneratingLogActivity : AppCompatActivity() {
     }
 
     private fun generate() {
-        handler.postDelayed(Runnable { this.log() }, 1000)
+        handler.postDelayed({ this.log() }, 1000)
     }
 
     private fun log() {
