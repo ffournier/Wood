@@ -16,7 +16,6 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tonytangandroid.wood.LeavesCollectionFragment.TransactionListWithSearchKeyModel
 import com.tonytangandroid.wood.NotificationHelper.Companion.clearBuffer
 import com.tonytangandroid.wood.WoodTree.Companion.autoScroll
 

@@ -3,7 +3,9 @@ package com.tonytangandroid.wood.sample
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import timber.log.Timber
 
 class GeneratingLogActivity : AppCompatActivity() {
@@ -11,8 +13,12 @@ class GeneratingLogActivity : AppCompatActivity() {
     private var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_keep_generating_log)
+
+        val toolbar = findViewById<Toolbar>(R.id.app_toolbar)
+        setSupportActionBar(toolbar)
     }
 
     override fun onResume() {
