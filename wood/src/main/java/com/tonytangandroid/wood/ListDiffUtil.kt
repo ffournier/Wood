@@ -9,6 +9,7 @@ internal class ListDiffUtil : DiffUtil.ItemCallback<Leaf>() {
         this.mSearchKey = searchKey
     }
 
+
     override fun areItemsTheSame(oldItem: Leaf, newItem: Leaf): Boolean {
         // might not work always due to async nature of Adapter fails in very rare race conditions but
         // increases pref.
